@@ -48,7 +48,7 @@ server.post("/", function(req, res){
     });
 });
 
-server.listen(3000, function(req, res){
+server.listen(process.env.PORT || 3000, function(req, res){
     console.log("Server is listening ... ");
     console.log("Ready to handle request ...");
 });

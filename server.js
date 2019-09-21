@@ -1,5 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const validator = require("validator");
+const chalk = require("chalk");
+
+const success_promt = chalk.bold.green.inverse;
+const warning_promt = chalk.bold.yellow.inverse;
+const error_promt = chalk.bold.red.inverse;
+const inform_promt = chalk.bold.white.inverse;
 
 const server = express();
 server.set("view engine", "ejs");
@@ -16,7 +23,8 @@ server.get("/", function(req, res){
 
 server.post("/", function(req, res){
     var initialLength = req.body.initialLength;
-    var miles, feet, inches;
+    if (validator.isNumeric(initialLength) == true){
+        var miles, feet, inches;
     initialLength = Number(initialLength);
 
     miles = parseInt(initialLength / 63360);
@@ -46,6 +54,23 @@ server.post("/", function(req, res){
         resultOfFeet: feet, 
         resultOfInches: inches,
     });
+    } else {
+        console.log(error_promt("Invalid input from the user !!!"));
+        console.log(warning_promt("Redirect them to the home page !!!"));
+        res.render("400-error");
+    }
+});
+
+server.post("/pagenotfound-404", function(req, res){
+    res.redirect("/");
+});
+
+server.post("/badrequest-400", function(req, res){
+    res.redirect("/");
+});
+
+server.get("*", function(req, res){
+    res.render("404-error");
 });
 
 server.listen(process.env.PORT || 3000, function(req, res){
